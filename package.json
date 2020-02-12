@@ -7,6 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
+    "build": "tsc",
     "generate-docs": "node_modules/.bin/jsdoc --configure jsdoc.json --verbose README.md"
   },
   "repository": {
@@ -30,10 +31,14 @@
   },
   "homepage": "https://github.com/matias-kovero/tarkov#readme",
   "dependencies": {
+    "@types/pako": "^1.0.1",
+    "axios": "^0.19.2",
     "pako": "^1.0.11",
-    "request-promise-native": "^1.0.8"
+    "request-promise-native": "^1.0.8",
+    "ts-md5": "^1.2.7"
   },
   "devDependencies": {
-    "clean-jsdoc-theme": "^2.2.10"
+    "clean-jsdoc-theme": "^2.2.10",
+    "typescript": "^3.7.5"
   }
 }
