@@ -1,9 +1,8 @@
 import { Md5 } from "ts-md5/dist/md5";
 import {
   LAUNCHER_ENDPOINT,
-  LAUNCHER_VERSION,
   PROD_ENDPOINT,
-  GAME_VERSION
+  Versions,
 } from "./globals";
 import { AxiosInstance, AxiosResponse } from "axios";
 import * as pako from "pako";
@@ -14,7 +13,7 @@ import {
   BadTwoFactorCodeError,
   CaptchaRequiredError,
   ApiError
-} from "../errors";
+} from "../apiErrors";
 
 interface AuthOptions {
   aid?: string;
@@ -34,29 +33,10 @@ interface AuthOptions {
  * @private
  */
 export default class Auth {
-  aid?: string;
-  lang: string;
-  region: string;
-  gameVersion: string;
-  dataCenters: string;
-  ipRegion: string;
-  token_type: string;
-  expires_in: number;
-  access_token: string;
-  refresh_token: string;
+
   client: AxiosInstance;
   constructor(client: AxiosInstance, options?: AuthOptions) {
     this.client = client;
-    this.aid = options?.aid;
-    this.lang = options?.lang ?? "en";
-    this.region = options?.region ?? "";
-    this.gameVersion = options?.gameVersion ?? "";
-    this.dataCenters = options?.dataCenters ?? "";
-    this.ipRegion = options?.ipRegion ?? "";
-    this.token_type = options?.token_type ?? "";
-    this.expires_in = options?.expires_in ?? 0;
-    this.access_token = options?.access_token ?? "";
-    this.refresh_token = options?.refresh_token ?? "";
   }
   /**
    * Login with email & password. Return new Auth.
@@ -66,11 +46,11 @@ export default class Auth {
    * @param {String} captcha
    * @param {String} hwid
    */
-  async login(email: string, password: string, captcha: string, hwid: string): Promise<AuthResponse> {
+  async login(email: string, password: string, hwid: string, captcha?: string): Promise<AuthResponse> {
     try {
       const md5pass = Md5.hashStr(password) as string;
       const body = new LoginRequest(email, md5pass, hwid, captcha);
-      const url = `https://${LAUNCHER_ENDPOINT}/launcher/login?launcherVersion=${LAUNCHER_VERSION}&branch=live`;
+      const url = `https://${LAUNCHER_ENDPOINT}/launcher/login?launcherVersion=${Versions.LAUNCHER}&branch=live`;
       const res = await this.post_json(url, body);
       // Check if response was successful
       const loginResponse = new LoginResponse(res);
@@ -83,16 +63,16 @@ export default class Auth {
     }
   }
 
-  async exchange_access_token(access_token: string, hwid: string) {
+  async exchange_access_token(access_token: string, hwid: string): Promise<Session> {
     try {
       const response = await this.client.post<
         any,
         AxiosResponse<ExchangeResponse>
       >(
-        `https://${PROD_ENDPOINT}/launcher/game/start?launcherVersion=${LAUNCHER_VERSION}&branch=live`,
+        `https://${PROD_ENDPOINT}/launcher/game/start?launcherVersion=${Versions.LAUNCHER}&branch=live`,
         {
           version: {
-            major: GAME_VERSION,
+            major: Versions.GAME,
             game: "live",
             backend: "6"
           },
@@ -117,6 +97,7 @@ export default class Auth {
       return new Session(response.data.data);
     } catch (err) {
       console.log("[E_A_T]", new Date(), err.message);
+      throw err;
     }
   }
 
@@ -169,7 +150,7 @@ class LoginRequest {
   pass: string;
   hwCode: string;
   captcha?: string;
-  constructor(email: string, pass: string, hwCode: string, captcha: string) {
+  constructor(email: string, pass: string, hwCode: string, captcha?: string) {
     this.email = email;
     this.pass = pass;
     this.hwCode = hwCode;

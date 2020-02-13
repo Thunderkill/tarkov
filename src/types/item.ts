@@ -1,11 +1,11 @@
-interface InventoryItem {
+interface Item {
     _id: string;
     _tpl: string;
     schemaId: string;
     parentId: string;
     slotId: string;
     upd: ItemOptions;
-    location: InventoryLocation;
+    location: Location;
   }
   
   interface ItemOptions {
@@ -20,7 +20,7 @@ interface InventoryItem {
     Key: ItemKey;
   }
   
-  interface InventoryLocation {
+  interface Location {
     x: number;
     y: number;
     r: number;

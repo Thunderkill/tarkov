@@ -1,7 +1,7 @@
 export class ApiError extends Error {
   constructor(message?: string) {
     super(message);
-    this.name = "ApiError";
+    this.name = "UnknownApiError";
   }
 }
 
@@ -40,13 +40,6 @@ export class WrongActivationCodeError extends ApiError {
   }
 }
 
-export class EnterCaptchaError extends ApiError {
-  constructor(message?: string) {
-    super(message);
-    this.name = "EnterCaptchaError";
-  }
-}
-
 export class MissingParametersError extends ApiError {
   constructor(message?: string) {
     super(message);
@@ -72,5 +65,12 @@ export class CaptchaRequiredError extends ApiError {
   constructor(message?: string) {
     super(message);
     this.name = "CaptchaRequiredError";
+  }
+}
+
+export class RateLimitedError extends ApiError {
+  constructor(message?: string) {
+    super(message);
+    this.name = "RateLimitedError";
   }
 }

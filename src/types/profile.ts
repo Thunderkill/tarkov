@@ -68,7 +68,7 @@ enum Side {
   }
   
   interface Inventory {
-    items: InventoryItem[];
+    items: Item[];
     equipment: string;
     stash?: string;
     questRaidItems: string;

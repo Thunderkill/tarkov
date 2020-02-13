@@ -105,7 +105,7 @@ export default class Profile {
    * Updates profiles invetory
    * @param {Array} items - array of changed items in inventory.
    */
-  async updateItems(items: InventoryItem[]) {
+  async updateItems(items: Item[]) {
     return new Promise((resolve, reject) => {
       try {
         items.forEach(item => {
@@ -127,7 +127,7 @@ export default class Profile {
    * Updates profiles invetory
    * @param {Array} items - array of new items in inventory.
    */
-  async addItems(items: InventoryItem[]) {
+  async addItems(items: Item[]) {
     return new Promise((resolve, reject) => {
       try {
         items.forEach(item => {
@@ -146,7 +146,7 @@ export default class Profile {
    * Updates profiles invetory
    * @param {Array} items - array of removed items from inventory.
    */
-  async removeItems(items: InventoryItem[]) {
+  async removeItems(items: Item[]) {
     return new Promise((resolve, reject) => {
       try {
         items.forEach(item => {
